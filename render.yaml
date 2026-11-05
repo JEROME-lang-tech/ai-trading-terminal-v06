@@ -1,0 +1,31 @@
+# Render.com — free web service.
+# Free tier sleeps after ~15 min idle; point a free uptime pinger
+# (UptimeRobot / cron-job.org) at https://<your-app>.onrender.com/healthz
+# every 5-10 minutes to keep it awake.
+services:
+  - type: web
+    name: ai-trading-terminal
+    runtime: docker          # or: python
+    plan: free
+    region: frankfurt
+    healthCheckPath: /healthz
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: DB_PATH
+        value: /data/trader.db
+      - key: PROFILE
+        value: validated
+      - key: VENUE
+        value: simulator
+      - key: ACCOUNT_TYPE
+        value: demo
+      - key: TICK_SECONDS
+        value: "300"
+      - key: APP_TOKEN
+        generateValue: true   # guards /api/control on a public URL
+    # uncomment for a persistent disk (paid add-on on Render):
+    # disk:
+    #   name: trader-data
+    #   mountPath: /data
+    #   sizeGB: 1
